@@ -109,7 +109,7 @@ export default function CheckoutForm({ totalAmount, onClose }: CheckoutFormProps
         currency="USD"
         description={paymentDescription}
         walletAddress="0xbcCC71800D147a297c81Bb8dabf2Cdcf67E394b3"
-      //  redirectUrl={typeof window !== 'undefined' ? `${window.location.origin}/checkout/success` : ''}
+       redirectUrl={typeof window !== 'undefined' ? `${window.location.origin}/checkout/success` : ''}
         onSuccess={handleSuccess}
         onError={handleError}
         isOpen={true}
