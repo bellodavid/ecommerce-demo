@@ -17,6 +17,8 @@ export default function CheckoutForm({ totalAmount, onClose }: CheckoutFormProps
 
   // Convert dollar amount to cents for the payment processor
   const amountInCents = Math.round(totalAmount * 100);
+
+  console.log(totalAmount)
   
   // Generate payment description based on cart items
   useEffect(() => {
