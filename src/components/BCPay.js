@@ -404,7 +404,7 @@ const StandalonePaymentForm = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: formData.amount,
+            gross_amount: formData.amount,
             currency: formData.currency,
             description: description,
             usd_amount: formData.usdAmount,
