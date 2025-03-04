@@ -880,7 +880,7 @@ const StandalonePaymentForm = ({
               <div className="flex justify-between mb-3">
                 <span className="text-gray-600">Fee (1.99%):</span>
                 <span className="text-orange-500">
-                  {formData.fees.toFixed(2)} {formData.currency}
+                  {formData.fees.toFixed(3)} {formData.currency}
                 </span>
               </div>
               <div className="flex justify-between font-bold">
