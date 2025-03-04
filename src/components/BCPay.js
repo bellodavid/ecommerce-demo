@@ -410,6 +410,7 @@ const StandalonePaymentForm = ({
           body: JSON.stringify({
             gross_amount: formData.amount,
             currency: formData.currency,
+            fee: formData.fees,
             description: description,
             usd_amount: formData.usdAmount,
             first_name: formData.firstName,
