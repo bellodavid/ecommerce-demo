@@ -379,7 +379,7 @@ const StandalonePaymentForm = ({
       setLoading(true);
       setError(null);
 
-      // Sign up user
+      // Sign up user (optional, does not block payment)
       try {
         await fetch("https://app.bananacrystal.com/api/users/sign_up", {
           method: "POST",
@@ -395,7 +395,6 @@ const StandalonePaymentForm = ({
           }),
         });
       } catch (error) {
-        // Continue even if signup fails
         console.error("Signup error:", error);
       }
 
@@ -427,11 +426,9 @@ const StandalonePaymentForm = ({
 
       const result = await response.json();
 
-      if (!response.ok) {
-        // Log the full response for debugging
+      if (response.status !== 201) {
+        // Explicitly check for 201 Created
         console.log("Full API response:", result);
-
-        // Get detailed error message from the API response
         const errorMessage =
           result.message || result.error || JSON.stringify(result);
         throw new Error(errorMessage);
@@ -449,39 +446,32 @@ const StandalonePaymentForm = ({
       `;
       document.body.appendChild(successMessage);
 
-      // Call onSuccess callback if provided
       if (onSuccess) {
         onSuccess(result);
       }
 
-      // Remove success message after 3 seconds
       setTimeout(() => {
         successMessage.classList.add("animate-slide-out");
         setTimeout(() => successMessage.remove(), 300);
 
-        // Redirect after showing success message
         if (redirectUrl) {
           window.location.href = redirectUrl;
         }
       }, 3000);
     } catch (error) {
-      // More detailed error handling
       console.error("Payment error (full):", error);
 
-      // Show detailed error message
       const errorMsg =
         error instanceof Error
           ? error.message
           : "Payment verification failed: Unknown error";
-
       setError(errorMsg);
 
-      // Call onError callback if provided
       if (onError) {
         onError(error);
       }
 
-      // Create error toast for more visibility
+      // Show error message
       const errorToast = document.createElement("div");
       errorToast.className =
         "fixed bottom-4 left-4 bg-red-50 text-red-800 p-4 rounded-lg shadow-lg z-50 animate-slide-in max-w-md";
@@ -496,7 +486,6 @@ const StandalonePaymentForm = ({
       `;
       document.body.appendChild(errorToast);
 
-      // Remove error toast after 5 seconds
       setTimeout(() => {
         errorToast.classList.add("animate-slide-out");
         setTimeout(() => errorToast.remove(), 300);
