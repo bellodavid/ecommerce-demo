@@ -426,7 +426,9 @@ const StandalonePaymentForm = ({
 
       const result = await response.json();
 
-      if (response.status !== 201) {
+      console.log(result)
+      
+      if (response.data.status !== 201) {
         // Explicitly check for 201 Created
         console.log("Full API response:", result);
         const errorMessage =
