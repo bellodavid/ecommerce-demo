@@ -132,11 +132,7 @@ export default function CheckoutForm({
         currency="USD"
         description={paymentDescription}
         walletAddress="0xbcCC71800D147a297c81Bb8dabf2Cdcf67E394b3"
-        redirectUrl={
-          typeof window !== "undefined"
-            ? `${window.location.origin}/checkout/success`
-            : ""
-        }
+        redirectUrl=""
         onSuccess={handleSuccess}
         onError={handleError}
         isOpen={true}
