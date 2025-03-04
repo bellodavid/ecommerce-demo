@@ -379,7 +379,7 @@ const StandalonePaymentForm = ({
       setLoading(true);
       setError(null);
 
-      // Sign up user (optional, does not block payment)
+      // Sign up user (continue even if it fails)
       try {
         await fetch("https://app.bananacrystal.com/api/users/sign_up", {
           method: "POST",
@@ -424,56 +424,71 @@ const StandalonePaymentForm = ({
         }
       );
 
-      const result = await response.json();
-
-      console.log(result)
-      
-      if (response.data.status !== 201) {
-        // Explicitly check for 201 Created
-        console.log("Full API response:", result);
-        const errorMessage =
-          result.message || result.error || JSON.stringify(result);
-        throw new Error(errorMessage);
+      let result;
+      try {
+        result = await response.json();
+      } catch (error) {
+        console.warn("Failed to parse JSON response", error);
+        result = null; // If parsing fails, assume empty response
       }
 
-      // Show success message
-      const successMessage = document.createElement("div");
-      successMessage.className =
-        "fixed top-4 right-4 bg-green-50 text-green-800 p-4 rounded-lg shadow-lg z-50 animate-slide-in";
-      successMessage.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span>✅</span>
-          <p>Payment verified successfully!</p>
-        </div>
-      `;
-      document.body.appendChild(successMessage);
+      // Check for success: either response.status === 201 or response is empty (no status)
+      if (!response.status || response.status === 201) {
+        console.log("Payment successful:", result || "No response body");
 
-      if (onSuccess) {
-        onSuccess(result);
-      }
+        // Show success message
+        const successMessage = document.createElement("div");
+        successMessage.className =
+          "fixed top-4 right-4 bg-green-50 text-green-800 p-4 rounded-lg shadow-lg z-50 animate-slide-in";
+        successMessage.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span>✅</span>
+            <p>Payment verified successfully!</p>
+          </div>
+        `;
+        document.body.appendChild(successMessage);
 
-      setTimeout(() => {
-        successMessage.classList.add("animate-slide-out");
-        setTimeout(() => successMessage.remove(), 300);
-
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+          onSuccess(result);
         }
-      }, 3000);
+
+        // Remove success message after 3 seconds
+        setTimeout(() => {
+          successMessage.classList.add("animate-slide-out");
+          setTimeout(() => successMessage.remove(), 300);
+
+          // Redirect after showing success message
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          }
+        }, 3000);
+
+        return; // Stop further execution
+      }
+
+      // Handle failure cases
+      console.log("Full API response:", result);
+      const errorMessage =
+        result?.message || result?.error || "Unknown error occurred";
+      throw new Error(errorMessage);
     } catch (error) {
       console.error("Payment error (full):", error);
 
+      // Show detailed error message
       const errorMsg =
         error instanceof Error
           ? error.message
           : "Payment verification failed: Unknown error";
+
       setError(errorMsg);
 
+      // Call onError callback if provided
       if (onError) {
         onError(error);
       }
 
-      // Show error message
+      // Create error toast for more visibility
       const errorToast = document.createElement("div");
       errorToast.className =
         "fixed bottom-4 left-4 bg-red-50 text-red-800 p-4 rounded-lg shadow-lg z-50 animate-slide-in max-w-md";
@@ -488,6 +503,7 @@ const StandalonePaymentForm = ({
       `;
       document.body.appendChild(errorToast);
 
+      // Remove error toast after 5 seconds
       setTimeout(() => {
         errorToast.classList.add("animate-slide-out");
         setTimeout(() => errorToast.remove(), 300);

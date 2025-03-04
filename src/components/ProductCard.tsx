@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{product.name}</h3>
         <p className="text-gray-600 dark:text-gray-300 text-sm mt-1 line-clamp-2">{product.description}</p>
         <div className="flex justify-between items-center mt-4">
-          <span className="text-xl font-bold text-gray-900 dark:text-white">${product.price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">${product.price.toFixed(3)}</span>
           <button
             onClick={() => addItem(product)}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition-colors"
