@@ -151,7 +151,11 @@ const COUNTRY_CODES = [
   { country: "Rwanda", code: "+250", isoCode: "RW" },
   { country: "Saint Kitts and Nevis", code: "+1-869", isoCode: "KN" },
   { country: "Saint Lucia", code: "+1-758", isoCode: "LC" },
-  { country: "Saint Vincent and the Grenadines", code: "+1-784", isoCode: "VC" },
+  {
+    country: "Saint Vincent and the Grenadines",
+    code: "+1-784",
+    isoCode: "VC",
+  },
   { country: "Samoa", code: "+685", isoCode: "WS" },
   { country: "San Marino", code: "+378", isoCode: "SM" },
   { country: "Sao Tome and Principe", code: "+239", isoCode: "ST" },
@@ -910,7 +914,8 @@ const StandalonePaymentForm = ({
                   USDT Amount to Pay
                 </div>
                 <div className="text-3xl font-bold text-gray-900">
-                  ${usdAmount ? formatCurrency(usdAmount) : "..."} USDT
+                  ${usdAmount ? formatCurrency(amount + formData.fees) : "..."}{" "}
+                  USDT
                 </div>
               </div>
             </div>
@@ -935,7 +940,8 @@ const StandalonePaymentForm = ({
                 {formData.walletAddress}
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Send exactly ${usdAmount ? formatCurrency(usdAmount) : "..."}{" "}
+                Send exactly $
+                {usdAmount ? formatCurrency(usdAmount + formData.fees) : "..."}{" "}
                 USDT to the store's wallet address on the Polygon network
               </p>
             </div>
